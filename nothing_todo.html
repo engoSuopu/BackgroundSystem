@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+        <title>菜单</title>
+        <link rel="stylesheet" href="fonts/iconfont.css"/>
+        <link rel="stylesheet" href="css/font.css"/>
+        <link rel="stylesheet" href="css/weui.min.css"/>
+        <link rel="stylesheet" href="css/jquery-weui.min.css"/>
+        <link rel="stylesheet" href="css/mui.css"/>
+        <link rel="stylesheet" href="css/animate.css"/>
+        <link rel="stylesheet" href="css/pages/notice.css"/>
+        <script>(function (doc, win) {
+          var docEl = doc.documentElement,
+            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+            recalc = function () {
+              var clientWidth = docEl.clientWidth;
+              if (!clientWidth) return;
+              docEl.style.fontSize = 20 * (clientWidth / 320) + 'px';
+            };
+
+          if (!doc.addEventListener) return;
+          win.addEventListener(resizeEvt, recalc, false);
+          doc.addEventListener('DOMContentLoaded', recalc, false);
+        })(document, window);</script>
+    </head>
+    <body> 	
+        <header>
+            <div class="titlebar reverse" style="background-color:#438EB9 ;">
+            	<a id="abcde" style="color:white ;padding-left:10px;">
+                    <i class="iconfont">&#xe640;</i>
+                </a>
+                <h1>菜品</h1>
+            </div>
+        </header>
+	        
+	    <div class="mui-content" > 
+	        <article style="padding-bottom: 0px;padding-top:50px;" id="Menu" >
+      		
+	        </article>
+        </div>
+        <script src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/add.js"></script>
+		<script src="js/mui.min.js"></script>
+        <script>
+			var returnData;
+			var str="";
+			mui.init();
+			mui.plusReady(function() {
+				var StoreId = localStorage.getItem("StoreId");
+			    var id = localStorage.getItem("id")
+			    
+				if(StoreId == null) {
+					mui.openWindow({
+						url: 'login.html'
+					});
+				} else {
+					mui.ajax("http://192.168.53.8/api/Normal/GetData", {
+						data: {
+							procName: "N_GetStoreMenus",
+							args: JSON.stringify({
+								StoreId: StoreId //此处应取保存的StoreId
+			
+							}),
+							
+						},
+						dataType: 'json',
+						method: 'get',
+			            
+						success: function(data) {
+			 				
+							returnData = JSON.parse(data);
+//							alert(returnData[0]["Categorys"][0]["Menus"][0]["MenuItem"][0]["ItemText"]);
+							var element = document.getElementById("Menu");
+													
+							for(var i = 0; i < returnData[0]["Categorys"].length; i++)  {
+												
+								//加载菜单左侧列表
+                                if(returnData[0]["Categorys"][id]["Menus"][i]["MenuText"] == null){
+                                	alert("该目录下没有菜品");
+                                }else{
+                                	para = document.createElement("p"); 
+									para.className = 'ccc';
+									para.href = 'nothing_detail.html';
+									para.innerHTML =             	     
+									'<div class="weui_cells weui_cells_access animated fadeInRight" id="wewu" onclick="into()">' +									
+										'<div class="weui_cell_bd weui_cell_primary">'+ 
+											'<div class="weui_cell_bd_img" >' +
+	  											'<img src="'+returnData[0]["Categorys"][id]["Menus"][i]["imgUrl"]+'"  width="100%" height="100%">' +
+	  					      				'</div>' +
+											'<p class="hhh">' + returnData[0]["Categorys"][id]["Menus"][i]["MenuText"] +'</p>' + 
+											'<p class="hhhh">' + "价格"+ '</p>' + 
+											'<p class="hhhhh">' + returnData[0]["Categorys"][id]["Menus"][i]["MenuPrice"] + '</p>' +
+										'</div>'+
+									'</div>';
+									element.appendChild(para);
+                                					
+ 							}							
+							}
+						}
+						 
+					});
+					 
+				}
+			})
+			
+			abcde.onclick = function () {	
+				var abcde = document.getElementById("abcde");
+				mui.back();
+            	window.location = 'notice.html';
+           	}
+			function into(){
+				var wewu = document.getElementById("wewu");
+				window.location = 'notice_detail.html';
+			}
+        </script>
+    </body>
+</html>

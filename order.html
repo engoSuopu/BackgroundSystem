@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+        <title>发货单号</title>
+        <link rel="stylesheet" href="fonts/iconfont.css"/>
+        <link rel="stylesheet" href="css/font.css"/>
+        <link rel="stylesheet" href="css/weui.min.css"/>
+        <link rel="stylesheet" href="css/jquery-weui.min.css"/>
+        <link rel="stylesheet" href="css/mui.css"/>
+        <link rel="stylesheet" href="css/animate.css"/>
+        <link rel="stylesheet" href="css/pages/order.css"/> 
+        <script>
+        	(function (doc, win) {
+	          var docEl = doc.documentElement,
+	            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+	            recalc = function () {
+	              var clientWidth = docEl.clientWidth;
+	              if (!clientWidth) return;
+	              docEl.style.fontSize = 20 * (clientWidth / 320) + 'px';
+	            };
+	
+	            if (!doc.addEventListener) return;
+	            win.addEventListener(resizeEvt, recalc, false);
+	            doc.addEventListener('DOMContentLoaded', recalc, false);
+	        })(document, window);
+        </script>
+    </head>
+    <body>
+        <header>
+            <div class="titlebar reverse" style="background-color:#438EB9 ;">
+            	<a id="tryBack" style="color:white ;padding-left:10px;">
+                    <i class="iconfont">&#xe640;</i>
+                </a>
+                <h1>订单详情</h1> 
+            </div>
+        </header>
+        <article style="bottom: 0;">
+            <ul class="xunjia-box">
+            	<li class="inner">
+                    <div class="item-name">客户：</div>
+                    <div id="name" class="item-value"></div>
+                </li>
+            	<li class="inner">
+                    <div class="item-name">类型：</div>
+                    <div class="item-value">外送</div>
+                </li>
+                <li class="inner">
+                    <div class="item-name">总价：</div>
+                    <div id="price" class="item-value"></div>
+                </li>
+                <li class="inner">
+                    <div class="item-name">订单编号：</div>
+                    <div id="orderNumber" class="item-value"></div>
+                </li>
+                <li class="inner">
+                    <div class="item-name">Tel：</div>
+                    <div id="tel" class="item-value"></div>
+                </li>
+                <li class="inner">
+                    <div class="item-name">下单时间：</div>
+                    <div id="dateTime" class="item-value"></div>
+                </li>
+                <li class="inner">
+                    <div class="item-name">地址：</div>
+                    <div id="clientAddress" class="item-value"></div>
+                </li>
+                <li class="inner">
+                    <div class="item-name">备注：</div>
+                    <div id="notes" class="item-value"></div>
+                </li>
+            </ul>
+            <div id="veg" class="details">
+                <!--<div class="detail-box">
+                    <div class="detail-title"  style="text-align: center;">
+                    	<span>春卷 × 2</span>
+                    </div>
+                    <hr style="opacity: 0.1;" />
+                    <div class="detail-wrap" style="padding-top: 10px;">
+                    	<span class="left">数量：</span>
+                        <span class="left">2</span>
+                    	<span class="right green">中</span>
+                    	<span class="right">规格：</span>
+                    </div>
+                    <div class="detail-wrap">
+                    	<span class="left">价格：</span>
+                        <span class="right red">$3.90</span>
+                    </div>
+                </div>-->
+            </div>
+        </article>
+
+        <script src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/add.js"></script>
+		<script src="js/mui.min.js"></script>
+		<script>
+			mui.plusReady(function(){
+				var StoreId = localStorage.getItem("StoreId");
+				var orderId = localStorage.getItem("orderId");
+				window.token = localStorage.getItem("token");
+//				alert(orderId);
+				var element = document.getElementById("veg");
+				if(StoreId == null){
+					alert("进入到登出阶段");
+					mui.openWindow({url:'login.html'});
+				} else {
+					mui.ajax("http://192.168.53.8/api/user/GetData", {
+						data: {
+							procName: "GetStoreOrderDetail",
+							args: JSON.stringify({
+								StoreId: StoreId,//此处应取保存的StoreId
+								OrderId: orderId
+							}),
+						},
+						method: "get",
+						headers: {
+							"auth": window.token
+						}, //通过请求头来发送token，放弃了通过cookie的发送方式
+
+						success: function(data) {
+//							alert(1);
+							returnData = JSON.parse(data);
+							if(returnData[0]["OrderId"] == orderId){
+//								alert(1);
+								if((returnData[0]["ClientName"]) != null){
+									var name = document.createTextNode(returnData[0]["ClientName"]);
+									document.getElementById("name").appendChild(name);
+								} else {
+									var name = document.createTextNode("未知");
+									document.getElementById("name").appendChild(name);
+								}
+								
+								//计算价格
+								var price = 0;
+								for (var j = 0; j < returnData[0]["dbo.OrderDetail"].length; j++) {
+									price = price + returnData[0]["dbo.OrderDetail"][j]["Price"] * returnData[0]["dbo.OrderDetail"][j]["Quantity"];
+								}
+								var price2 = price.toFixed(2);
+								var price3 = document.createTextNode("$ " + price2);
+								document.getElementById("price").appendChild(price3);
+								
+								var orderNumber = document.createTextNode(returnData[0]["OrderNumber"]);
+								document.getElementById("orderNumber").appendChild(orderNumber);
+								
+								var tel = document.createTextNode(returnData[0]["ClientTelephone"]);
+								document.getElementById("tel").appendChild(tel);
+								
+								var dateTime1 = returnData[0]["CreateTime"];
+								var dateTime2 = dateTime1.substring(0,10);
+								var dateTime3 = dateTime2 + " " + dateTime1.substring(11,19);
+								dateTime = document.createTextNode(dateTime3);
+								document.getElementById("dateTime").appendChild(dateTime);
+								
+								var clientAddress = document.createTextNode(returnData[0]["ClientAddress"]);
+								document.getElementById("clientAddress").appendChild(clientAddress);
+								
+								var notes = document.createTextNode(returnData[0]["Notes"]);
+								document.getElementById("notes").appendChild(notes);
+								
+								for (var j = 0; j < returnData[0]["dbo.OrderDetail"].length; j++) {
+									var pPrice = returnData[0]["dbo.OrderDetail"][j]["Quantity"]*returnData[0]["dbo.OrderDetail"][j]["Price"];
+									var pPrice2 = pPrice.toFixed(2);
+									para = document.createElement("div");
+									para.className = 'detail-box';
+									var attrName = "";
+									if(returnData[0]["dbo.OrderDetail"][j]["AttrName"] == null || returnData[0]["dbo.OrderDetail"][j]["AttrName"] == ""){
+										attrName = "中";
+									} else {
+										attrName = returnData[0]["dbo.OrderDetail"][j]["AttrName"];
+									}
+									para.innerHTML =
+									'<div class="detail-title"  style="text-align: center;">'+
+				                    	'<span>'+ returnData[0]["dbo.OrderDetail"][j]["PName"] +'</span>'+
+				                    '</div>'+
+				                    '<hr style="opacity: 0.1;" />'+
+				                    '<div class="detail-wrap" style="padding-top: 10px;">'+
+				                    	'<span class="left">数量：</span>'+
+				                        '<span class="left">'+ returnData[0]["dbo.OrderDetail"][j]["Quantity"] +'</span>'+
+				                    	'<span class="right green">'+ attrName +'</span>'+
+				                    	'<span class="right">规格：</span>'+
+				                    '</div>'+
+				                    '<div class="detail-wrap">'+
+				                    	'<span class="left">价格：</span>'+
+				                    	'<span class="left">'+ returnData[0]["dbo.OrderDetail"][j]["Price"] +'</span>'+
+				                        '<span class="right red">$ '+ pPrice2 +'</span>'+
+				                    '</div>';
+									element.appendChild(para);
+								}
+							}
+						},
+					});
+				}
+			});
+			tryBack.onclick = function () {	
+				var tryBack = document.getElementById("tryBack");
+            	window.location = 'details.html';
+           	}
+		</script>
+    </body>
+</html>

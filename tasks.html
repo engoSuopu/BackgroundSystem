@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+        <title>代办事项</title>
+        <link rel="stylesheet" href="fonts/iconfont.css"/>
+        <link rel="stylesheet" href="css/font.css"/>
+        <link rel="stylesheet" href="css/weui.min.css"/>
+        <link rel="stylesheet" href="css/jquery-weui.min.css"/>
+        <link rel="stylesheet" href="css/mui.css"/>
+        <link rel="stylesheet" href="css/animate.css"/>
+        <link rel="stylesheet" href="css/pages/tasks.css"/>
+        <link rel="stylesheet" href="css/pages/xunjia_bill.css"/>
+        <script>(function (doc, win) {
+          var docEl = doc.documentElement,
+            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+            recalc = function () {
+              var clientWidth = docEl.clientWidth;
+              
+              if (!clientWidth) return;
+              docEl.style.fontSize = 20 * (clientWidth / 320) + 'px';
+            };
+
+          if (!doc.addEventListener) return;
+          win.addEventListener(resizeEvt, recalc, false);
+          doc.addEventListener('DOMContentLoaded', recalc, false);
+        })(document, window);</script>
+    </head>
+    <body>
+ 		<div class="mui-content">
+ 			<div class="titlebar reverse" style="background-color: #438EB9;">
+                <h1>订单信息</h1>
+            </div>
+	        <article style="bottom: 54px;">
+	            <div id="alPt" onclick="getId(this)" class="weui_cells weui_cells_access animated fadeInRight">
+	              <div class="weui_cell">
+	                <div class="weui_cell_bd weui_cell_primary">
+	                    <p>
+	                    	<i class="iconfont" style="margin-left: 0.25rem;">&#xe61e;</i>
+	                    	<span style="margin-left: -0.4rem;">已打印订单</span>
+	                    	<!--输出已打印订单数量-->
+	                    	<span id="alPtNum" style="padding-left: 5.2rem;"></span>
+	                    </p>
+	                </div>
+	                <div class="iconfont">&#xe642;</div>
+	              </div>         
+	            </div>
+	            <div id="notPt" onclick="getId(this)" class="weui_cells weui_cells_access animated fadeInRight">
+	              <a class="weui_cell" href="details.html">
+	                <div class="weui_cell_bd weui_cell_primary">
+	                    <p>
+	                    	<i class="iconfont">&#xe61f;</i>未打印订单
+	                    	<!--输出未打印订单数量-->
+	                    	<span id="notPtNum" style="padding-left: 5.2rem; color: red;"></span>
+	                    </p>
+	                </div>
+	                <div class="iconfont">&#xe642;</div>
+	              </a>        
+	            </div>
+	            <ul class="xunjia-box" style="background-color: white; padding-top: 1rem;">
+	                <li class="inner">
+	                    <div class="item-name" style="width: 5rem;">今日营业总额：</div>
+	                    <div id="p0" style="padding-left: 2rem; color: red;">$ </div>
+	                </li>
+	                <li class="inner">
+	                    <div class="item-name" style="width: 5rem; padding-top: 0.5rem;">本月营业总额：</div>
+	                    <div id="p1" style="padding-left: 2rem; padding-top: 0.55rem; color: red;">$ </div>
+	                </li>
+	                <li class="inner">
+	                    <div class="item-name" style="width: 5rem; padding-top: 0.5rem;">今年营业总额：</div>
+	                    <div id="p2" style="padding-left: 2rem; padding-top: 0.55rem; color: red;">$ </div>
+	                </li>
+	            </ul>
+	        </article>
+        </div>
+        <footer>
+            <ul class="menubar animated fadeInUp delay3">
+                <li class="tab">
+                	<a href="notice.html" style="color: #000000; opacity: 0.5;">
+	                    <i class="iconfont">&#xe63c;</i>
+	                    <label class="tab-label">菜单</label>
+                    </a>
+                </li>
+           
+                <li class="tab active">
+	              	<a>
+		                <i class="iconfont">&#xe63d;</i>
+		                <label class="tab-label">订单</label> 
+	                </a>
+                </li>
+            
+                <li class="tab">
+                	<a href="tasks.html" style="color: #000000; opacity: 0.5;">
+	                    <i class="iconfont">&#xe63e;</i>
+	                    <label class="tab-label">设置</label>
+                    </a>
+                </li>
+            </ul>
+        </footer>
+        
+        <script src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/add.js"></script>
+		<script src="js/mui.min.js"></script>
+		
+		<script>
+			mui.plusReady(function(){
+				var StoreId = localStorage.getItem("StoreId");
+				window.token = localStorage.getItem("token");
+//				alert(window.token);
+				var alPrintId = 0;
+				var notPrintId = 0;
+				if(StoreId == null){
+					alert("进入到登出阶段");
+					mui.openWindow({url:'login.html'});
+				} else {
+					mui.ajax("http://192.168.53.8/api/user/GetData", { 
+						data: {
+							procName: "GetStoreOrdersStatusSum",
+							args: JSON.stringify({
+								StoreId: StoreId, //此处应取保存的StoreId
+								status:"已打印"
+							}),
+						},
+						method: "get",
+						headers: {"auth": window.token},//通过请求头来发送token，放弃了通过cookie的发送方式
+			
+						success: function(data) {
+							//console.log(data);
+							returnData = JSON.parse(data);
+							alPrintId = returnData;
+							var alNode = document.createTextNode(alPrintId);
+							document.getElementById("alPtNum").appendChild(alNode);
+						},
+					});
+					
+					mui.ajax("http://192.168.53.8/api/user/GetData", { 
+						data: {
+							procName: "GetStoreOrdersStatusSum",
+							args: JSON.stringify({
+								StoreId: StoreId, //此处应取保存的StoreId
+								status:"打印中"
+							}),
+						},
+						method: "get",
+						headers: {"auth": window.token},//通过请求头来发送token，放弃了通过cookie的发送方式
+			
+						success: function(data) {
+							//console.log(data);
+							returnData = JSON.parse(data);
+							localStorage.setItem("data", data);
+							notPrintId = returnData;
+							var notNode = document.createTextNode(notPrintId);
+							document.getElementById("notPtNum").appendChild(notNode);					
+						},
+					});
+					
+					var arr = new Array;
+					arr[0] = "今日";
+					arr[1] = "本月";
+					arr[2] = "今年";
+					mui.ajax("http://192.168.53.8/api/user/GetData", { 
+						data: {
+							procName: "GetStoreOrderPriceByDate",
+							args: JSON.stringify({
+								StoreId: StoreId, //此处应取保存的StoreId
+								Date: arr[0]
+							}),
+						},
+						method: "get",
+						headers: {"auth": window.token},//通过请求头来发送token，放弃了通过cookie的发送方式
+			
+						success: function(data) {
+							//console.log(data);
+							if(data == ""){
+								var today = 0;
+							}
+							var pNode = document.createTextNode(today);
+							document.getElementById("p0").appendChild(pNode);					
+						},
+					});
+					
+					mui.ajax("http://192.168.53.8/api/user/GetData", { 
+						data: {
+							procName: "GetStoreOrderPriceByDate",
+							args: JSON.stringify({
+								StoreId: StoreId, //此处应取保存的StoreId
+								Date: arr[1]
+							}),
+						},
+						method: "get",
+						headers: {"auth": window.token},//通过请求头来发送token，放弃了通过cookie的发送方式
+			
+						success: function(data) {
+							//console.log(data);
+							if(data == null){
+								data == 0;
+							}
+							var pNode = document.createTextNode(data);
+							document.getElementById("p1").appendChild(pNode);					
+						},
+					});
+					
+					mui.ajax("http://192.168.53.8/api/user/GetData", { 
+						data: {
+							procName: "GetStoreOrderPriceByDate",
+							args: JSON.stringify({
+								StoreId: StoreId, //此处应取保存的StoreId
+								Date: arr[2]
+							}),
+						},
+						method: "get",
+						headers: {"auth": window.token},//通过请求头来发送token，放弃了通过cookie的发送方式
+			
+						success: function(data) {
+							if(data == null){
+								data == 0;
+							}
+							var pNode = document.createTextNode(data);
+							document.getElementById("p2").appendChild(pNode);					
+						},
+					});
+				}
+			});
+			
+			function getId(obj) {				
+　　　　　　　 　	var ptId = obj.id;
+//				alert(ptId);
+				localStorage.setItem("ptId",ptId);
+				window.location = 'details.html';　　　　
+			}
+		</script>
+    </body>
+</html>
+<!--GetStoreOrderDetail-->

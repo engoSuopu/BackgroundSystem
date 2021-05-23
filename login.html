@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+        <title>后台管理系统</title>
+        <link rel="stylesheet" href="fonts/iconfont.css"/>
+        <link rel="stylesheet" href="css/font.css"/>
+        <link rel="stylesheet" href="css/mui.css"/>
+        <link rel="stylesheet" href="css/weui.min.css"/>
+        <link rel="stylesheet" href="css/jquery-weui.min.css"/>
+        <link rel="stylesheet" href="css/animate.css"/>
+        <link rel="stylesheet" href="css/pages/login.css"/> 
+        <script>(function (doc, win) { 
+        	var docEl = doc.documentElement,
+            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+            recalc = function () {
+	            var clientWidth = docEl.clientWidth;
+	            if (!clientWidth) return;
+	            docEl.style.fontSize = 20 * (clientWidth / 320) + 'px';
+            };
+
+	        if (!doc.addEventListener) return;
+	        win.addEventListener(resizeEvt, recalc, false);
+	        doc.addEventListener('DOMContentLoaded', recalc, false);
+        })(document, window);</script>
+    </head>
+    <body>
+        <div class="header" >
+            <h1>后台管理系统</h1>		
+        </div>
+        <div class="login-wrap" style="margin-top: 2rem;">
+            <div class="login-box">
+                <form>
+                    <div class="input-wrap">
+                        <input id="LoginId" type="text" name="LoginId" placeholder="账号/邮箱">
+                    </div>
+                    <div class="input-wrap">
+                        <input id="password" name="password" type="password" placeholder="密码">
+                    </div>                   
+                </form>
+            </div> 
+
+			<div style="margin-top: 2rem;">
+            	<button id="login" class="weui_btn login-btn weui_btn_primary" style="background-color: #438EB9;border-radius:10px;" >
+            		登录
+            	</button>	 
+			</div>                    
+        </div>
+        
+        <script src="js/mui.min.js"></script>
+		<script src="js/mui.enterfocus.js"></script>
+		<script src="js/jquery.min.js"></script>
+		<script src="js/app.js"></script>
+		
+		<script>
+			(function($, doc) {
+				$.init({
+					statusBarBackground: '#f7f7f7'
+				});
+
+				$.plusReady(function() {
+
+				})
+				
+				document.getElementById('login').addEventListener('tap', function() {
+					//$("#test").val()
+					//LoginId=LoginId&password=password
+					var loginiddate = $("#LoginId")[0].value;
+					var passworddate = $("#password")[0].value;
+					var postdate = "LoginId=" + loginiddate + "&password=" + passworddate;
+					//alert(postdate);
+					mui.ajax('http://192.168.53.8/api/Login/Post', {
+						data: postdate,
+						type: 'post',
+						contentType: "application/x-www-form-urlencoded; charset=utf-8",
+						timeout: 60000,
+						success: function(data) {
+							if (data.Success) {
+							alert("seccess!!");
+                            //为简单起见，将token保存在全局变量中。
+                            window.token = data.Token;
+                            localStorage.setItem("token", window.token);
+//                          alert(window.token);
+                            var StoreId=1;
+                            localStorage.setItem("StoreId", StoreId);
+                            mui.openWindow({
+								url: 'notice.html'
+							});
+	                        } else {
+	                            alert("登录失败:" + data.Message);
+	                        }
+						},error: function(xhr, type, errorThrown) {
+							alert(xhr.responseText);
+						}
+					});
+				});
+			}(mui, document));
+		</script>
+    </body>
+</html>

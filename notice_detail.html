@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+        <title>修改菜品</title>
+        <link rel="stylesheet" href="fonts/iconfont.css"/>
+        <link rel="stylesheet" href="css/font.css"/>
+        <link rel="stylesheet" href="css/weui.min.css"/>
+        <link rel="stylesheet" href="css/jquery-weui.min.css"/>
+        <link rel="stylesheet" href="css/mui.css"/>
+        <link rel="stylesheet" href="css/animate.css"/>
+        <link rel="stylesheet" href="css/pages/notice_detail.css"/>
+        <script>(function (doc, win) {
+          var docEl = doc.documentElement,
+            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+            recalc = function () {
+              var clientWidth = docEl.clientWidth;
+              if (!clientWidth) return;
+              docEl.style.fontSize = 20 * (clientWidth / 320) + 'px';
+            };
+
+          if (!doc.addEventListener) return;
+          win.addEventListener(resizeEvt, recalc, false);
+          doc.addEventListener('DOMContentLoaded', recalc, false);
+        })(document, window);</script>
+    </head>
+    <body>
+        <header>
+            <div class="titlebar reverse" style="background-color:#438EB9 ;">
+            	<a id="abcde" style="color:white ;padding-left:10px;">
+                    <i class="iconfont">&#xe640;</i>
+                </a>
+                <h1>详细信息</h1>
+            </div>
+        </header>
+        <div class="pc-kk-form">
+	        <form action="">
+				<div class="pc-kk-form-list">
+					<input type="text" placeholder="菜品名称">
+				</div>
+				<div class="pc-kk-form-list-a">
+					<button style="float: right;border-radius:10px;height: 44px;width: 60px;">更改图片</button>
+					<p>菜品图片</p>
+					
+					
+				</div>
+				<div class="pc-kk-form-list">
+					<input type="tel" placeholder="规格">
+				</div>
+				<div class="pc-kk-form-list">
+					<input type="text" placeholder="价格">
+				</div>
+				<div class="pc-kk-form-list" style="height:auto">
+					<textarea>菜品介绍</textarea>
+				</div>
+				<div class="pc-kk-form-btn">
+					<button>更改菜品</button>
+				</div>
+				<div class="pc-kk-form-btn">
+					<button>删除菜品</button>
+				</div>
+			</form>
+			
+			<script src="js/jquery.min.js"></script>
+			<script type="text/javascript" src="js/add.js"></script>
+			<script src="js/mui.min.js"></script>
+			<script>
+				abcde.onclick = function () {
+					var abcde = document.getElementById("abcde");
+					mui.back();
+	            	window.location = 'nothing_todo.html';
+	           	}
+			</script>
+		</div>
+    </body>
+</html>

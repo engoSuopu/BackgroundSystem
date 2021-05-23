@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+        <title>菜单</title>
+        <link rel="stylesheet" href="fonts/iconfont.css"/>
+        <link rel="stylesheet" href="css/font.css"/>
+        <link rel="stylesheet" href="css/weui.min.css"/>
+        <link rel="stylesheet" href="css/jquery-weui.min.css"/>
+        <link rel="stylesheet" href="css/mui.css"/>
+        <link rel="stylesheet" href="css/animate.css"/>
+        <link rel="stylesheet" href="css/pages/notice.css"/>
+        <script>(function (doc, win) {
+          var docEl = doc.documentElement,
+            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+            recalc = function () {
+              var clientWidth = docEl.clientWidth;
+              if (!clientWidth) return;
+              docEl.style.fontSize = 20 * (clientWidth / 320) + 'px';
+            };
+
+        	if (!doc.addEventListener) return;
+        	win.addEventListener(resizeEvt, recalc, false);
+        	doc.addEventListener('DOMContentLoaded', recalc, false);
+        })(document, window);</script>
+    </head>
+    <body>
+
+        <header>
+			<div class="titlebar reverse" style="background-color:#438EB9 ;">
+				<h1>菜单</h1>
+			</div>
+		</header>
+    
+        <div class="mui-content" style="margin-top: 44px;">
+            <div style="padding-bottom: 54px;">
+            	<ul id="cgy" class="weui_cells weui_cells_access animated fadeInRight">
+            		
+          		</ul>
+        	</div>      
+        </div>
+        <footer>
+            <ul class="menubar animated fadeInUp delay3">
+            	
+                <li class="tab active">
+                	<a>
+	                    <i class="iconfont">&#xe63c;</i>
+	                    <label class="tab-label">菜单</label>
+                    </a>
+                </li>
+           
+                <li class="tab">
+	              	<a href="tasks.html" style="color: #000000; opacity: 0.5;">
+		                <i class="iconfont">&#xe63d;</i>
+		                <label class="tab-label">订单</label> 
+	                </a>
+                </li>
+            
+                <li class="tab">
+                	<a href="tasks.html" style="color: #000000; opacity: 0.5;">
+	                    <i class="iconfont">&#xe63e;</i>
+	                    <label class="tab-label">设置</label>
+                    </a>
+                </li>
+              
+            </ul>
+        </footer>
+        <script src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/add.js"></script>
+		<script src="js/mui.min.js"></script>
+        <script>
+			var returnData;
+			var str="";
+			var aaa;
+			mui.init();
+			mui.plusReady(function() {
+				var StoreId = localStorage.getItem("StoreId"); 
+				
+//				var storeId = 1;
+			    var cgyId = localStorage.getItem("cgyId");
+				if(StoreId == null) {
+					mui.openWindow({
+						url: 'login.html'
+					});
+				} else {
+					
+					mui.ajax("http://192.168.53.8/api/Normal/GetData", {
+						data: {
+							procName: "N_GetStoreMenus",
+							args: JSON.stringify({
+								StoreId: StoreId //此处应取保存的StoreId
+							}),
+						},
+						method: "get",
+			
+						success: function(data) {
+//							alert(data);
+//							console.log(data);
+							returnData = JSON.parse(data);
+//							console.log(returnData);
+				    	   
+							var element = document.getElementById("cgy");  
+			
+							for(var i = 0; i < returnData[0]["Categorys"].length; i++) {
+								aaa = returnData[0]["Categorys"][i]["cgyId"] ;
+							 
+								var li = document.createElement("li");
+								element.appendChild(li); 
+                                li.className = 'weui_cell';
+　　　　　　　　                 				li.setAttribute("id", i);
+                        		li.setAttribute("onclick", "getId(this)");
+                        	
+                        		li.innerHTML = 
+									"<div class='weui_cell_bd weui_cell_primary'>"+ 
+										'<p>' + 
+											returnData[0]["Categorys"][i]["Category"] +
+										'</p>' +
+									"</div>";			
+							}
+						},
+					});
+				}
+			})
+			
+			function getId(obj) {				
+　　　　　　　 　	var id = obj.id;
+				localStorage.setItem("id",id);
+				window.location = 'nothing_todo.html';　　　　　
+			}
+
+        </script>
+    </body>
+</html>
