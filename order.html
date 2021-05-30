@@ -105,7 +105,7 @@
 					alert("进入到登出阶段");
 					mui.openWindow({url:'login.html'});
 				} else {
-					mui.ajax("http://192.168.53.8/api/user/GetData", {
+					mui.ajax("http://api.jhjnzx.com/api/user/GetData", {
 						data: {
 							procName: "GetStoreOrderDetail",
 							args: JSON.stringify({

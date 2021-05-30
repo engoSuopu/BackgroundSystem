@@ -114,7 +114,7 @@
 					alert("进入到登出阶段");
 					mui.openWindow({url:'login.html'});
 				} else {
-					mui.ajax("http://192.168.53.8/api/user/GetData", { 
+					mui.ajax("http://api.jhjnzx.com/api/user/GetData", { 
 						data: {
 							procName: "GetStoreOrdersStatusSum",
 							args: JSON.stringify({
@@ -134,7 +134,7 @@
 						},
 					});
 					
-					mui.ajax("http://192.168.53.8/api/user/GetData", { 
+					mui.ajax("http://api.jhjnzx.com/api/user/GetData", { 
 						data: {
 							procName: "GetStoreOrdersStatusSum",
 							args: JSON.stringify({
@@ -159,7 +159,7 @@
 					arr[0] = "今日";
 					arr[1] = "本月";
 					arr[2] = "今年";
-					mui.ajax("http://192.168.53.8/api/user/GetData", { 
+					mui.ajax("http://api.jhjnzx.com/api/user/GetData", { 
 						data: {
 							procName: "GetStoreOrderPriceByDate",
 							args: JSON.stringify({
@@ -180,7 +180,7 @@
 						},
 					});
 					
-					mui.ajax("http://192.168.53.8/api/user/GetData", { 
+					mui.ajax("http://api.jhjnzx.com/api/user/GetData", { 
 						data: {
 							procName: "GetStoreOrderPriceByDate",
 							args: JSON.stringify({
@@ -201,7 +201,7 @@
 						},
 					});
 					
-					mui.ajax("http://192.168.53.8/api/user/GetData", { 
+					mui.ajax("http://api.jhjnzx.com/api/user/GetData", { 
 						data: {
 							procName: "GetStoreOrderPriceByDate",
 							args: JSON.stringify({

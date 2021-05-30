@@ -70,7 +70,7 @@
 					var passworddate = $("#password")[0].value;
 					var postdate = "LoginId=" + loginiddate + "&password=" + passworddate;
 					//alert(postdate);
-					mui.ajax('http://192.168.53.8/api/Login/Post', {
+					mui.ajax('http://api.jhjnzx.com/api/Login/Post', {
 						data: postdate,
 						type: 'post',
 						contentType: "application/x-www-form-urlencoded; charset=utf-8",
